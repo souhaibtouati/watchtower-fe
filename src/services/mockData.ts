@@ -1,0 +1,147 @@
+import type { Container, WatchtowerStatus, UpdateLog, WatchtowerConfig } from '../types';
+
+// Mock data for demonstration when backend is not available
+export const mockContainers: Container[] = [
+  {
+    id: 'abc123def456',
+    name: 'nginx-proxy',
+    image: 'nginx:latest',
+    imageId: 'sha256:abc123',
+    status: 'running',
+    state: 'running',
+    created: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+    ports: [
+      { privatePort: 80, publicPort: 8080, type: 'tcp' },
+      { privatePort: 443, publicPort: 8443, type: 'tcp' },
+    ],
+    labels: { 'com.centurylinklabs.watchtower.enable': 'true' },
+    hasUpdate: true,
+    latestImageId: 'sha256:def456',
+  },
+  {
+    id: 'def456ghi789',
+    name: 'postgres-db',
+    image: 'postgres:15',
+    imageId: 'sha256:ghi789',
+    status: 'running',
+    state: 'running',
+    created: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
+    ports: [{ privatePort: 5432, publicPort: 5432, type: 'tcp' }],
+    labels: { 'com.centurylinklabs.watchtower.enable': 'true' },
+    hasUpdate: false,
+  },
+  {
+    id: 'ghi789jkl012',
+    name: 'redis-cache',
+    image: 'redis:7-alpine',
+    imageId: 'sha256:jkl012',
+    status: 'running',
+    state: 'running',
+    created: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString(),
+    ports: [{ privatePort: 6379, publicPort: 6379, type: 'tcp' }],
+    labels: { 'com.centurylinklabs.watchtower.enable': 'true' },
+    hasUpdate: true,
+    latestImageId: 'sha256:mno345',
+  },
+  {
+    id: 'jkl012mno345',
+    name: 'web-app',
+    image: 'myapp/web:v2.1.0',
+    imageId: 'sha256:pqr678',
+    status: 'running',
+    state: 'running',
+    created: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+    ports: [{ privatePort: 3000, publicPort: 3000, type: 'tcp' }],
+    labels: { 'com.centurylinklabs.watchtower.enable': 'true' },
+    hasUpdate: false,
+  },
+  {
+    id: 'mno345pqr678',
+    name: 'watchtower',
+    image: 'containrrr/watchtower:latest',
+    imageId: 'sha256:stu901',
+    status: 'running',
+    state: 'running',
+    created: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString(),
+    ports: [],
+    labels: {},
+    hasUpdate: false,
+  },
+  {
+    id: 'pqr678stu901',
+    name: 'mongodb',
+    image: 'mongo:6',
+    imageId: 'sha256:vwx234',
+    status: 'stopped',
+    state: 'exited',
+    created: new Date(Date.now() - 45 * 24 * 60 * 60 * 1000).toISOString(),
+    ports: [{ privatePort: 27017, type: 'tcp' }],
+    labels: { 'com.centurylinklabs.watchtower.enable': 'false' },
+    hasUpdate: true,
+    latestImageId: 'sha256:yza567',
+  },
+];
+
+export const mockWatchtowerStatus: WatchtowerStatus = {
+  isRunning: true,
+  containerId: 'mno345pqr678',
+  lastCheck: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+  nextCheck: new Date(Date.now() + 4 * 60 * 60 * 1000).toISOString(),
+  schedule: '0 0 */6 * * *',
+  monitoredContainers: 5,
+  containersWithUpdates: 3,
+};
+
+export const mockUpdateLogs: UpdateLog[] = [
+  {
+    id: '1',
+    timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+    containerName: 'nginx-proxy',
+    oldImage: 'nginx:1.24',
+    newImage: 'nginx:1.25',
+    status: 'success',
+    message: 'Container updated successfully',
+  },
+  {
+    id: '2',
+    timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
+    containerName: 'postgres-db',
+    oldImage: 'postgres:15.3',
+    newImage: 'postgres:15.4',
+    status: 'success',
+    message: 'Container updated successfully',
+  },
+  {
+    id: '3',
+    timestamp: new Date(Date.now() - 48 * 60 * 60 * 1000).toISOString(),
+    containerName: 'redis-cache',
+    oldImage: 'redis:7.0-alpine',
+    newImage: 'redis:7.2-alpine',
+    status: 'failed',
+    message: 'Failed to pull new image: network timeout',
+  },
+  {
+    id: '4',
+    timestamp: new Date(Date.now() - 72 * 60 * 60 * 1000).toISOString(),
+    containerName: 'web-app',
+    oldImage: 'myapp/web:v2.0.0',
+    newImage: 'myapp/web:v2.1.0',
+    status: 'success',
+    message: 'Container updated successfully',
+  },
+];
+
+export const mockWatchtowerConfig: WatchtowerConfig = {
+  schedule: '0 0 */6 * * *',
+  cleanup: true,
+  includeRestarting: false,
+  includeStopped: false,
+  revivesStopped: false,
+  pollInterval: 300,
+  labelEnable: false,
+  monitorOnly: false,
+  notificationsEnabled: true,
+};
+
+// Simulate API delay
+export const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
