@@ -2,6 +2,8 @@
 
 A modern web application for managing [Watchtower](https://containrrr.dev/watchtower/) Docker container updates.
 
+[![Docker Hub](https://img.shields.io/docker/v/souhaibtouati/watchtower-fe?label=Docker%20Hub)](https://hub.docker.com/r/souhaibtouati/watchtower-fe)
+
 ## Features
 
 - **Container Dashboard**: View all Docker containers with their current status
@@ -10,6 +12,27 @@ A modern web application for managing [Watchtower](https://containrrr.dev/watcht
 - **Watchtower Status**: Monitor Watchtower's running status and schedule
 - **Update History**: View recent update logs with success/failure status
 - **Real-time Feedback**: Visual indicators for container states and update progress
+
+## Quick Start with Docker
+
+```bash
+docker run -d \
+  --name watchtower-fe \
+  -p 3000:80 \
+  -e API_URL=http://your-api-host:8080 \
+  souhaibtouati/watchtower-fe:latest
+```
+
+Then open http://localhost:3000
+
+See [DEPLOYMENT.md](DEPLOYMENT.md) for full deployment options.
+
+## Docker Environment Variables
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `API_URL` | `http://watchtower-api:8080` | Backend Watchtower API URL |
+| `API_TIMEOUT` | `60s` | API request timeout |
 
 ## Tech Stack
 
@@ -20,13 +43,12 @@ A modern web application for managing [Watchtower](https://containrrr.dev/watcht
 - **Axios** for API communication
 - **date-fns** for date formatting
 
-## Getting Started
+## Development
 
 ### Prerequisites
 
 - Node.js 18+
 - npm or yarn
-- A running Watchtower instance with HTTP API enabled
 
 ### Installation
 
@@ -41,7 +63,7 @@ npm run dev
 npm run build
 ```
 
-### Environment Variables
+### Environment Variables (Development)
 
 Create a `.env` file in the root directory:
 
@@ -93,11 +115,9 @@ src/
 └── main.tsx            # Application entry point
 ```
 
-## Development
-
 The application includes mock data by default for easy development without a backend. Set `VITE_USE_MOCK_DATA=false` in your `.env` file to connect to a real backend.
 
-### Building for Production
+## Building for Production
 
 ```bash
 npm run build
@@ -108,6 +128,3 @@ The built files will be in the `dist/` directory.
 ## License
 
 MIT
-  },
-])
-```

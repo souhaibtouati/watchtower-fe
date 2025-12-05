@@ -1,10 +1,15 @@
 services:
   watchtower-fe:
     build: .
+    image: souhaibtouati/watchtower-fe:latest
     container_name: watchtower-fe
     restart: unless-stopped
     ports:
       - "3000:80"
+    environment:
+      # Watchtower API configuration
+      - API_URL=http://watchtower-api:8080
+      - API_TIMEOUT=60s
     networks:
       - watchtower-network
     # Uncomment if you have a backend API service

@@ -1,5 +1,9 @@
 # Watchtower Frontend Deployment Guide
 
+## Docker Hub Image
+
+The image is available on Docker Hub: **[souhaibtouati/watchtower-fe](https://hub.docker.com/r/souhaibtouati/watchtower-fe)**
+
 ## Quick Deployment with Docker
 
 ### Prerequisites on Debian Server
@@ -17,23 +21,31 @@ sudo apt-get install -y docker-compose-plugin
 
 ### Deployment Steps
 
-#### Option 1: One-Command Deployment (Recommended)
-
-Run the deploy script directly on your server:
+#### Option 1: Docker Run (Quickest)
 ```bash
-curl -fsSL https://raw.githubusercontent.com/souhaibtouati/watchtower-fe/main/deploy.sh | bash
+docker run -d \
+  --name watchtower-fe \
+  -p 3000:80 \
+  -e API_URL=http://your-api-host:8080 \
+  --restart unless-stopped \
+  souhaibtouati/watchtower-fe:latest
 ```
 
-Or download and run:
+#### Option 2: Docker Compose (Recommended)
 ```bash
-wget https://raw.githubusercontent.com/souhaibtouati/watchtower-fe/main/deploy.sh
-chmod +x deploy.sh
-./deploy.sh
+mkdir -p /opt/watchtower-fe && cd /opt/watchtower-fe
+
+# Download docker-compose.yml
+curl -fsSL https://raw.githubusercontent.com/souhaibtouati/watchtower-fe/main/docker-compose.yml -o docker-compose.yml
+
+# Edit environment variables
+nano docker-compose.yml
+
+# Start the container
+docker compose up -d
 ```
 
-#### Option 2: Manual Git Deployment
-
-1. On your server:
+#### Option 3: Git Clone & Build
 ```bash
 cd /opt
 sudo git clone https://github.com/souhaibtouati/watchtower-fe.git
@@ -44,47 +56,54 @@ npm run build
 docker compose up -d --build
 ```
 
-2. To update later:
-```bash
-cd /opt/watchtower-fe
-git pull
-npm install
-npm run build
-docker compose up -d --build
+## Environment Variables
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `API_URL` | `http://watchtower-api:8080` | Backend Watchtower API URL |
+| `API_TIMEOUT` | `60s` | API request timeout |
+
+### Configuration Examples
+
+#### Docker Compose with environment variables:
+```yaml
+services:
+  watchtower-fe:
+    image: souhaibtouati/watchtower-fe:latest
+    ports:
+      - "3000:80"
+    environment:
+      - API_URL=http://192.168.1.100:8080
+      - API_TIMEOUT=120s
 ```
 
-#### Option 3: Copy Files Directly (No git required)
-
-1. **On your local machine**, copy the required files to your server:
+#### Using .env file:
 ```bash
-# From the watchtower-fe directory
-scp -r dist/ Dockerfile nginx.conf docker-compose.yml user@your-server:/opt/watchtower-fe/
+# Create .env file
+cat > .env << EOF
+API_URL=http://my-backend:8080
+API_TIMEOUT=60s
+EOF
+
+# Run with env file
+docker compose --env-file .env up -d
 ```
 
-2. **On your Debian server**:
+#### Docker run with environment variables:
 ```bash
-cd /opt/watchtower-fe
-docker compose up -d --build
+docker run -d \
+  --name watchtower-fe \
+  -p 3000:80 \
+  -e API_URL=http://192.168.1.100:8080 \
+  -e API_TIMEOUT=120s \
+  souhaibtouati/watchtower-fe:latest
 ```
 
-3. The app is now available at `http://your-server:3000`
-
-### Configuration
-
-#### Change the port
+### Change the Port
 Edit `docker-compose.yml` and change the port mapping:
 ```yaml
 ports:
   - "8080:80"  # Change 8080 to your desired port
-```
-
-#### Connect to a backend API
-Edit `nginx.conf` and update the proxy_pass URL:
-```nginx
-location /api {
-    proxy_pass http://your-backend-host:8080;
-    # ...
-}
 ```
 
 ### Useful Commands
