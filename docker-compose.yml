@@ -1,0 +1,26 @@
+services:
+  watchtower-fe:
+    build: .
+    container_name: watchtower-fe
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    networks:
+      - watchtower-network
+    # Uncomment if you have a backend API service
+    # depends_on:
+    #   - watchtower-api
+
+  # Example backend API service (you'll need to create this)
+  # watchtower-api:
+  #   image: your-watchtower-api:latest
+  #   container_name: watchtower-api
+  #   restart: unless-stopped
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock:ro
+  #   networks:
+  #     - watchtower-network
+
+networks:
+  watchtower-network:
+    driver: bridge
