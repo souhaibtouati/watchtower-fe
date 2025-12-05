@@ -20,6 +20,7 @@ docker run -d \
   --name watchtower-fe \
   -p 3000:80 \
   -e API_URL=http://your-api-host:8080 \
+  -e API_TOKEN=your-watchtower-api-token \
   souhaibtouati/watchtower-fe:latest
 ```
 
@@ -32,6 +33,7 @@ See [DEPLOYMENT.md](DEPLOYMENT.md) for full deployment options.
 | Variable | Default | Description |
 |----------|---------|-------------|
 | `API_URL` | `http://watchtower-api:8080` | Backend Watchtower API URL |
+| `API_TOKEN` | *(none)* | Watchtower HTTP API token (must match `WATCHTOWER_HTTP_API_TOKEN`) |
 | `API_TIMEOUT` | `60s` | API request timeout |
 
 ## Tech Stack
@@ -69,6 +71,7 @@ Create a `.env` file in the root directory:
 
 ```env
 VITE_API_URL=/api          # Backend API URL
+VITE_API_TOKEN=your-token  # Watchtower HTTP API token
 VITE_USE_MOCK_DATA=true    # Use mock data for demo (set to false for production)
 ```
 

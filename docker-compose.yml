@@ -9,6 +9,7 @@ services:
     environment:
       # Watchtower API configuration
       - API_URL=http://watchtower-api:8080
+      - API_TOKEN=${WATCHTOWER_HTTP_API_TOKEN:-your-secret-token}
       - API_TIMEOUT=60s
     networks:
       - watchtower-network

@@ -13,12 +13,21 @@ class ApiService {
 
   constructor() {
     this.baseUrl = import.meta.env.VITE_API_URL || '/api';
+    const apiToken = import.meta.env.VITE_API_TOKEN || '';
+    
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+    };
+    
+    // Add Watchtower API token if configured
+    if (apiToken) {
+      headers['Authorization'] = `Bearer ${apiToken}`;
+    }
+    
     this.client = axios.create({
       baseURL: this.baseUrl,
       timeout: 30000,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers,
     });
   }
 
